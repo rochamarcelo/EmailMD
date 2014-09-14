@@ -90,8 +90,11 @@ class ImapStream
     public function close()
     {
         if ( $this->_resource ) {
+            $this->_resource = null;
             return @imap_close($this->_resource);
         }
+
+        $this->_resource = null;
         return true;
     }
 
@@ -125,7 +128,6 @@ class ImapStream
     public function getResource()
     {
         if ( !$this->_resource ) {
-            var_dump('open');
             $this->open();
         }
         return $this->_resource;
