@@ -1,0 +1,16 @@
+{
+    "require": {
+        "monolog/monolog": "1.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "EmailMD\\": "src/EmailMD"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
