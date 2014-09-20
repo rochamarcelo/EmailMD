@@ -46,11 +46,13 @@ class Mailbox implements \Iterator
      */
     public function filterSince(\DateTime $date)
     {
-        $numbers = @imap_search($this->_stream->getResource(), 'SINCE '. $date->format('Y-m-d'));
+        $numbers = imap_search($this->_stream->getResource(), 'SINCE '. $date->format('Y-m-d'));
+
         if ( !is_array($numbers) ) {
             $this->_messageNumbers = array();
+        } else {
+            $this->_messageNumbers = $numbers;
         }
-        $this->_messageNumbers = $numbers;
         return $this;
     }
 
