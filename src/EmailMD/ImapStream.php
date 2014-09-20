@@ -133,4 +133,22 @@ class ImapStream
         return $this->_resource;
     }
 
+    /**
+     * method triggered when invoking inaccessible methods in an object context.
+     *
+     * @param string $name      method name inaccessible
+     * @param array  $arguments arguments used
+     *
+     * @access public
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        $name = 'imap_' . $name;
+        if ( !function_exists($name) ) {
+            throw new \Exception('Call to undefined method ImapStream::$name().');
+        }
+        return call_user_func_array($name, $arguments);
+    }
+
 }
