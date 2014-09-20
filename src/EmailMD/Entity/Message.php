@@ -1,6 +1,10 @@
 <?php
 namespace EmailMD\Entity;
-
+/**
+ * Entity factory
+ *
+ * @package EmailMD.Entity
+ */
 class Message
 {
     /**

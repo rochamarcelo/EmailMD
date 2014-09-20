@@ -53,6 +53,7 @@ class Mailbox implements \Iterator
         } else {
             $this->_messageNumbers = $numbers;
         }
+        $this->rewind();
         return $this;
     }
 
@@ -71,6 +72,7 @@ class Mailbox implements \Iterator
         } else {
             $this->_messageNumbers = array();
         }
+        $this->rewind();
         return $this;
     }
 
