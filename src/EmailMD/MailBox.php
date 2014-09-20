@@ -46,7 +46,7 @@ class Mailbox implements \Iterator
      */
     public function filterSince(\DateTime $date)
     {
-        $numbers = imap_search($this->_stream->getResource(), 'SINCE '. $date->format('Y-m-d'));
+        $numbers = $this->_stream->search('SINCE '. $date->format('Y-m-d'));
 
         if ( !is_array($numbers) ) {
             $this->_messageNumbers = array();
@@ -65,7 +65,7 @@ class Mailbox implements \Iterator
      */
     public function refresh()
     {
-        $count = @imap_num_msg($this->_stream->getResource());
+        $count = $this->_stream->num_msg();
 
         if ( $count >= 1 ) {
             $this->_messageNumbers = range(1, $count);
@@ -87,12 +87,11 @@ class Mailbox implements \Iterator
     private function _readMessage($number)
     {
         if ( !isset($this->_messages[$number]) ) {
-            $resource = $this->_stream->getResource();
-            $overview = imap_fetch_overview($resource, $number);
+            $overview = $this->_stream->fetch_overview($number);
             if ( isset($overview[0]) ) {
                 $overview = $overview[0];
             }
-            $body = imap_body($resource, $number, 0);
+            $body = $this->_stream->body($number, 0);
 
             $this->_messages[$number] = $this->_factory->make($overview, $body);
         }
