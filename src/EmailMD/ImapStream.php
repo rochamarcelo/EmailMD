@@ -146,7 +146,7 @@ class ImapStream
     {
         $name = 'imap_' . $name;
         if ( !function_exists($name) ) {
-            throw new \Exception('Call to undefined method ImapStream::$name().');
+            throw new \BadMethodCallException("Call to undefined method ImapStream::{$name}().");
         }
 
         array_unshift($arguments, $this->getResource());
