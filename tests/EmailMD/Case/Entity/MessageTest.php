@@ -1,5 +1,5 @@
 <?php
-namespace EmailMD\Test;
+namespace EmailMD\Test\Entity;
 
 use EmailMD\Entity\Message;
 
@@ -35,6 +35,11 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         );
 
         $message = new Message;
+
+        $message->setSubject($array['subject']);
+        $expected = $array['subject'];
+        $result = $message->getSubject();
+        $this->assertSame($result, $expected);
 
         $message->setFrom($array['from']);
         $expected = $array['from'];
