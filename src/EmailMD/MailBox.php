@@ -13,6 +13,7 @@ class Mailbox implements \Iterator
 
     private $_factory;
 
+    private $_order = 'ASC';
 
     /**
      * Message list
@@ -49,11 +50,10 @@ class Mailbox implements \Iterator
         $numbers = $this->_stream->search('SINCE '. $date->format('Y-m-d'));
 
         if ( !is_array($numbers) ) {
-            $this->_messageNumbers = array();
-        } else {
-            $this->_messageNumbers = $numbers;
+            $numbers = array();
         }
-        $this->rewind();
+
+        $this->_setMessageNumbers($numbers);
         return $this;
     }
 
@@ -68,12 +68,28 @@ class Mailbox implements \Iterator
         $count = $this->_stream->num_msg();
 
         if ( $count >= 1 ) {
-            $this->_messageNumbers = range(1, $count);
+            $numbers = range(1, $count);
         } else {
-            $this->_messageNumbers = array();
+            $numbers = array();
         }
-        $this->rewind();
+        $this->_setMessageNumbers($numbers);
         return $this;
+    }
+    /**
+     * Set setMessageNumbers
+     *
+     * @param array $numbers List of message numbers
+     *
+     * @access private
+     * @return null
+     */
+    private function _setMessageNumbers($numbers)
+    {
+        if ( $this->_order == 'DESC' ) {
+            $numbers = array_reverse($numbers);
+        }
+        $this->_messageNumbers = $numbers;
+        $this->rewind();
     }
 
     /**
@@ -99,8 +115,26 @@ class Mailbox implements \Iterator
     }
 
     /**
+     * Reverse the messages order
+     *
+     * @access public
+     * @return null
+     */
+    public function reverse()
+    {
+        if ( $this->_order == 'ASC' ) {
+            $this->_order = 'DESC';
+        } else {
+            $this->_order = 'ASC';
+        }
+
+        $this->_messageNumbers = array_reverse($this->_messageNumbers);
+    }
+
+    /**
      * Rewind the Iterator to the first element
      *
+     * @access public
      * @return null
      */
     public function rewind()
@@ -122,6 +156,7 @@ class Mailbox implements \Iterator
     /**
      * Return the key of the current message
      *
+     * @access public
      * @return int
      */
     public function key()
@@ -132,6 +167,7 @@ class Mailbox implements \Iterator
     /**
      * Move forward to next element
      *
+     * @access public
      * @return null
      */
     public function next()
@@ -142,6 +178,7 @@ class Mailbox implements \Iterator
     /**
      * Checks if current position is valid
      *
+     * @access public
      * @return boolean
      */
     public function valid()

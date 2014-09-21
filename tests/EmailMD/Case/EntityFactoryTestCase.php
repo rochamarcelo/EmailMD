@@ -3,6 +3,11 @@ namespace EmailMD\Test;
 use EmailMD\Entity\Message;
 use EmailMD\EntityFactory;
 
+/**
+ * Test EntityFactory
+ *
+ * @package EmailMD.Test.Case
+ */
 class EntityFactoryTest extends \PHPUnit_Framework_TestCase
 {
 
