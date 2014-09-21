@@ -3,6 +3,19 @@ EmailMD
 
 A PHP library to read e-mails.
 
+Install with composer
+------------
+    {
+        "require": {
+            "rochasmarcelo/emailmd": "dev-master"
+        }
+    }
+
+## Requirements ##
+
+* PHP 5.3.*
+* Imap extension
+
 Example
 ------------
 **Getting a MailBox instance**
