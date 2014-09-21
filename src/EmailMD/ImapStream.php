@@ -75,7 +75,7 @@ class ImapStream
         }
 
         if ( !$this->_resource ) {
-            throw new \UnexpectedValueException('Could not connect to mailbox "$this->_mailbox".');
+            throw new \UnexpectedValueException('Could not connect to mailbox "' . $this->_mailbox . '".');
 
         }
 
