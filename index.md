@@ -1,37 +1,151 @@
-## Welcome to GitHub Pages
+EmailMD
+=======
 
-You can use the [editor on GitHub](https://github.com/rochamarcelo/EmailMD/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+A PHP library to read e-mails.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Install with composer
+------------
+    {
+        "require": {
+            "rochasmarcelo/emailmd": "dev-master"
+        }
+    }
 
-### Markdown
+## Requirements ##
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+* PHP 5.3.*
+* Imap extension
 
-```markdown
-Syntax highlighted code block
+Example
+------------
+**Getting a MailBox instance**
+```
+<?php
+    require_once 'vendor/autoload.php';
+    //Gmail
+    $MailBox = EmailMD\MailBoxFactory::gmail(
+        'yourusername@gmail.com',
+        'yourpassword'
+    );
 
-# Header 1
-## Header 2
-### Header 3
+    //Hotmail / live / msn
+    $MailBox = EmailMD\MailBoxFactory::live(
+        'yourusername@live.com',
+        'yourpassword'
+    );
 
-- Bulleted
-- List
+    //Yahoo
+    $MailBox = EmailMD\MailBoxFactory::yahoo(
+        'yourusername@yahoo.com',
+        'yourpassword'
+    );
 
-1. Numbered
-2. List
+    //Other pop3
+    $MailBox = EmailMD\MailBoxFactory::make(
+        '{localhost:110/pop3}INBOX',
+        'yourusername@site.com',
+        'yourpassword'
+    );
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+    //Other imap
+    $MailBox = EmailMD\MailBoxFactory::make(
+        '{localhost:993/imap/ssl}INBOX',
+        'yourusername@site.com',
+        'yourpassword'
+    );
+?>
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+**Basic usage**
 
-### Jekyll Themes
+```
+<?php
+    require_once 'vendor/autoload.php';
+    //Gmail
+    $MailBox = EmailMD\MailBoxFactory::gmail(
+        'yourusername@gmail.com',
+        'yourpassword'
+    );
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/rochamarcelo/EmailMD/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+    $MailBox->reverse();//Newest message first
+    $MailBox->filterSince(new DateTime());//Just message recieved today
+    //Get messages
+    foreach ( $MailBox as $messageNumber => $message ) {
+        echo 'Message number: ' . $messageNumber . PHP_EOL;
+        echo $message->getSubject() . PHP_EOL;
+    }
+?>
+```
+**Getting just some messages**
 
-### Support or Contact
+```
+<?php
+    require_once 'vendor/autoload.php';
+    //instance
+    $MailBox = EmailMD\MailBoxFactory::gmail(
+        'yourusername@gmail.com',
+        'yourpassword'
+    );
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+    //Get some messages
+    $limit = 10;
+    foreach ( $MailBox as $messageNumber => $message ) {
+        echo 'Message number: ' . $messageNumber . PHP_EOL;
+        echo $message->getSubject() . PHP_EOL;
+        $limit--;
+        if ( $limit < 1 ) {
+            break;
+        }
+    }
+?>
+```
+
+**Getting messages recieved since a specific date**
+
+```
+<?php
+    require_once 'vendor/autoload.php';
+    //instance
+    $MailBox = EmailMD\MailBoxFactory::gmail(
+        'yourusername@gmail.com',
+        'yourpassword'
+    );
+
+    //Since today
+    $MailBox->filterSince(new DateTime());
+    foreach ( $MailBox as $messageNumber => $message ) {
+        echo 'Message number: ' . $messageNumber . PHP_EOL;
+        echo $message->getSubject() . PHP_EOL;
+    }
+    //Since yesterday
+    $MailBox->filterSince(new DateTime('-1 days'));
+    foreach ( $MailBox as $messageNumber => $message ) {
+        echo 'Message number: ' . $messageNumber . PHP_EOL;
+        echo $message->getSubject() . PHP_EOL;
+    }
+?>
+```
+
+**Getting messages in reverse order**
+
+By default the mailbox will return the oldest messages first. But sometimes we need to get the newest messages first, to do so we need to call the "MailBox::reverse" method one time.
+
+```
+<?php
+    require_once 'vendor/autoload.php';
+    //instance
+    $MailBox = EmailMD\MailBoxFactory::gmail(
+        'yourusername@gmail.com',
+        'yourpassword'
+    );
+    $MailBox->reverse();//Now we get the newest first
+
+    //Since today
+    $MailBox->filterSince(new DateTime());
+    foreach ( $MailBox as $messageNumber => $message ) {
+        echo 'Message number: ' . $messageNumber . PHP_EOL;
+        echo $message->getSubject() . PHP_EOL;
+    }
+    $MailBox->reverse();//Now we get the oldest first
+?>
+```
